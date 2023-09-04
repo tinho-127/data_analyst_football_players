@@ -13,6 +13,7 @@ def main():
     #U21_PlayAtLeast_1Match(df)
     #Unique_nationality(df)
     #top_5_scorer_each_league(df)
+    #most_assist_league_22_23(df)
     
    
 def U21_PlayAtLeast_1Match(df):
@@ -184,7 +185,39 @@ def top_5_scorer_each_league(df):
     plt.savefig('Top_Scorer_League_22-23.png')
 
 
-
+def most_assist_league_22_23(df):
+    df_temp = df[['Player', 'Comp','Assists','MP','Goals','Min','90s']].copy()
+    df_temp.insert(4,"Total",df_temp['Assists'] * df_temp['90s'])
+    df_temp.sort_values(by=['Total'],ascending=False, inplace=True)
+    df_temp = df_temp.head(25)
+    font_size_lable = 21
+        
+    plt.figure(figsize=(19,10))
+    custom_palette = {}
+    for x in df_temp["Comp"]:
+        if x == "Bundesliga":
+            custom_palette[x] = 'r'
+        elif  x == "La Liga":
+            custom_palette[x] = 'orange'
+        elif  x == "Ligue 1":
+            custom_palette[x] = 'navy'
+        elif  x == "Premier League":
+            custom_palette[x] = 'purple'
+        else:
+            custom_palette[x] = 'blue'
+    sns.barplot(x = 'Player',
+            y = 'Total',
+            hue = 'Comp', 
+            data = df_temp,
+            errorbar = None,
+            palette=custom_palette,
+            dodge=False,
+            estimator=sum
+            )
+    plt.xticks(rotation=30, horizontalalignment="center", fontsize = font_size_lable - 15)
+    plt.title("Top Assists League 22-23", fontsize = font_size_lable - 4, fontweight = 900)
+    plt.grid(axis='y')
+    plt.savefig('Top_Assists_League_22-23.png')
 
 
 if __name__=="__main__":
