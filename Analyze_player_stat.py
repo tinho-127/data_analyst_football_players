@@ -14,6 +14,7 @@ def main():
     #Unique_nationality(df)
     #top_5_scorer_each_league(df)
     #most_assist_league_22_23(df)
+    man_city_stat(df)
     
    
 def U21_PlayAtLeast_1Match(df):
@@ -218,6 +219,16 @@ def most_assist_league_22_23(df):
     plt.title("Top Assists League 22-23", fontsize = font_size_lable - 4, fontweight = 900)
     plt.grid(axis='y')
     plt.savefig('Top_Assists_League_22-23.png')
+
+
+
+def man_city_stat(df):
+    df_temp = df [ df['Squad'] == 'Manchester City']
+    df_temp.sort_values(by="Goals", ascending = False,inplace = True)
+    df_temp = df_temp.head(10)
+    plt.pie(df_temp['Goals'], labels=df_temp['Player'], autopct='%.0f%%')
+    plt.show()
+
 
 
 if __name__=="__main__":
