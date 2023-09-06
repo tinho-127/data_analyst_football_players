@@ -223,10 +223,19 @@ def most_assist_league_22_23(df):
 
 
 def man_city_stat(df):
+    plt.figure(figsize=(19,10))
     df_temp = df [ df['Squad'] == 'Manchester City']
     df_temp.sort_values(by="Goals", ascending = False,inplace = True)
     df_temp = df_temp.head(10)
     plt.pie(df_temp['Goals'], labels=df_temp['Player'], autopct='%.0f%%')
+
+    plt.figure(figsize=(19,10))
+    df_temp = df [ df['Squad'] == 'Manchester City']
+    df_temp.insert(4,"Total",df_temp['Assists'] * df_temp['90s'])
+    df_temp.sort_values(by="Total", ascending = False,inplace = True)
+
+    df_temp = df_temp.head(10)
+    plt.pie(df_temp['Total'], labels=df_temp['Player'], autopct='%.0f%%')
     plt.show()
 
 
