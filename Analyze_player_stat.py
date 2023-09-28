@@ -24,7 +24,119 @@ def main():
     #nationality_distribution_U25(df)
     #U25_total_contri(df)
     #U25_top_assist(df)
+    #U25_top_def(df)
+    U25_gk(df)
 
+
+def U25_gk(df):
+    fig = plt.figure(figsize=(19,10))
+    U25 = df[ (df['Age'] < 26) & ( df['MP'] > 1) & ( df['Min'] > 1) &( df['Pos'] == 'GK')  ]
+    #U25['Total Contributiosn'] = U25['Goals'] + U25['Assists']*U25['90s']    
+    U25.sort_values(by = ['AerWon%'], ascending = [False],inplace = True)
+    U25.rename(columns={'Comp': 'League'}, inplace=True)
+
+    custom_palette = {}
+    for x in U25['League']:
+        if x == "Bundesliga":
+            custom_palette[x] = 'r'
+        elif  x == "La Liga":
+            custom_palette[x] = 'orange'
+        elif  x == "Ligue 1":
+            custom_palette[x] = 'navy'
+        elif  x == "Premier League":
+            custom_palette[x] = 'purple'
+        else:
+            custom_palette[x] = 'blue'
+    
+    ax = sns.scatterplot(x="Age",
+                    y="AerWon%",
+                    data=U25,
+                    hue="League",
+                    palette=custom_palette,
+                    size = "Clr",
+                    sizes=(10, 200))
+
+    fig.set_facecolor("whitesmoke")
+    ax.set_facecolor("#f7f0e5")
+    ax.yaxis.grid(True, color = 'lightgrey')
+    ax.set_xlim(15, 25,1)
+    ax.set_xticks(np.arange(16,25))
+    #ax.set_yticks(np.arange(0,2.1,.2))
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.set_ylabel('Aerial Won %',fontsize = 15,weight="bold")
+    ax.set_xlabel('Age',fontsize = 15,weight="bold")
+    
+    annotations = U25.head(7)  
+    for index, row in annotations.iterrows():
+        x = row["Age"]
+        y = row["AerWon%"]
+        label = row["Player"]
+        if index == 1308:
+            ax.text(x, y, label, fontsize=12, ha="left", va="top", color="black", weight="bold")
+        else:
+            ax.text(x, y, label, fontsize=12, ha="left", va="bottom", color="black", weight="bold")
+
+    #plt.title("Top Young Players with most Aerial Won 22/23", fontsize = 18, fontweight = 900)
+    #plt.savefig('Top-Young-Players-for-Aerwon-22-23.png')
+    pd.set_option('display.max_rows', 5000)
+    print(U25[['Player','Age','Squad','AerWon%','PasLonCmp','CrsPA','AerWon%','MP','Min','90s']])
+    #plt.show()
+    
+
+def U25_top_def(df):
+    fig = plt.figure(figsize=(19,10))
+    U25 = df[ (df['Age'] < 25) & ( df['MP'] > 9) & ( df['Min'] > 90) &( df['Pos'] != 'GK') &(( df['Pos'] == 'DF') | ( df['Pos'] == 'DFMF')) ]
+    #U25['Total Contribution'] = U25['Goals'] + U25['Assists']*U25['90s']    
+    U25.sort_values(by = ['AerWon%'], ascending = [False],inplace = True)
+    U25.rename(columns={'Comp': 'League'}, inplace=True)
+
+    custom_palette = {}
+    for x in U25['League']:
+        if x == "Bundesliga":
+            custom_palette[x] = 'r'
+        elif  x == "La Liga":
+            custom_palette[x] = 'orange'
+        elif  x == "Ligue 1":
+            custom_palette[x] = 'navy'
+        elif  x == "Premier League":
+            custom_palette[x] = 'purple'
+        else:
+            custom_palette[x] = 'blue'
+    
+    ax = sns.scatterplot(x="Age",
+                    y="AerWon%",
+                    data=U25,
+                    hue="League",
+                    palette=custom_palette,
+                    size = "Clr",
+                    sizes=(10, 200))
+
+    fig.set_facecolor("whitesmoke")
+    ax.set_facecolor("#f7f0e5")
+    ax.yaxis.grid(True, color = 'lightgrey')
+    ax.set_xlim(15, 25,1)
+    ax.set_xticks(np.arange(16,25))
+    #ax.set_yticks(np.arange(0,2.1,.2))
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.set_ylabel('Aerial Won %',fontsize = 15,weight="bold")
+    ax.set_xlabel('Age',fontsize = 15,weight="bold")
+    
+    annotations = U25.head(7)  
+    for index, row in annotations.iterrows():
+        x = row["Age"]
+        y = row["AerWon%"]
+        label = row["Player"]
+        if index == 1308:
+            ax.text(x, y, label, fontsize=12, ha="left", va="top", color="black", weight="bold")
+        else:
+            ax.text(x, y, label, fontsize=12, ha="left", va="bottom", color="black", weight="bold")
+
+    plt.title("Top Young Players with most Aerial Won 22/23", fontsize = 18, fontweight = 900)
+    plt.savefig('Top-Young-Players-for-Aerwon-22-23.png')
+
+    
 
 def U25_top_assist(df):
     fig = plt.figure(figsize=(19,10))
@@ -62,7 +174,7 @@ def U25_top_assist(df):
     ax.set_yticks(np.arange(0,2.1,.2))
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
-    ax.set_ylabel('Total Contribution',fontsize = 15,weight="bold")
+    ax.set_ylabel('Goal-creating actions',fontsize = 15,weight="bold")
     ax.set_xlabel('Age',fontsize = 15,weight="bold")
     
     annotations = U25.head(7)  
@@ -77,7 +189,6 @@ def U25_top_assist(df):
 
     plt.title("Top Young Players with most Pass Lead to Goal 22/23", fontsize = 18, fontweight = 900)
     plt.savefig('Top-Young-Players-for-Assits-Seasons-22-23.png')
-    #plt.show()
     
 
 
